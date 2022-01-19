@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 
@@ -81,6 +82,11 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 }
 
 func main() {
+	var bind string
+
+	flag.StringVar(&bind, "bind", ":9886", "bind")
+	flag.Parse()
+
 	exporter := NewExporter(0x14, 1)
 	prometheus.MustRegister(exporter)
 
@@ -94,5 +100,8 @@ func main() {
              </body>
              </html>`))
 	})
-	log.Fatal(http.ListenAndServe(":9101", nil))
+
+	if err := http.ListenAndServe(bind, nil); err != nil {
+		log.Fatal(err)
+	}
 }
