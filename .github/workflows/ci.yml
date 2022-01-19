@@ -1,0 +1,29 @@
+name: CI
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.16
+
+      - run: make format
+
+      - uses: actions-contrib/golangci-lint@v1
+        env:
+          GOROOT: ""
+        with:
+          args: "run"
+
+      - run: make build

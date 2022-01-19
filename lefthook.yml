@@ -1,0 +1,9 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.go"
+      run: make lint
+    format:
+      glob: "*.go"
+      run: make format
